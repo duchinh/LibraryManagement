@@ -1,173 +1,68 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using LibraryManagement.Core.DTOs;
+using LibraryManagement.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using LibraryManagement.Core.Entities;
-using LibraryManagement.Core.Interfaces.Services;
-using LibraryManagement.Core.DTOs;
-using System.Linq;
+using LibraryManagement.Application.Services;
 
 namespace LibraryManagement.WebAPI.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [ApiController]
     public class BorrowingRequestsController : ControllerBase
     {
-        private readonly IBorrowingService _borrowingService;
+        private readonly IBorrowRequestService _service;
 
-        public BorrowingRequestsController(IBorrowingService borrowingService)
+        public BorrowingRequestsController(IBorrowRequestService service)
         {
-            _borrowingService = borrowingService;
+            _service = service;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<BookBorrowingRequest>> CreateBorrowingRequest([FromBody] CreateBorrowingRequestDTO requestDto)
+        [HttpPost("Borrow")]
+        public async Task<IActionResult> BorrowBooks([FromBody] CreateBorrowingRequestDTO dto)
         {
             try
             {
-                if (requestDto == null || requestDto.BookIds == null || !requestDto.BookIds.Any())
-                {
-                    return BadRequest(new { message = "Book IDs are required" });
-                }
-
-                var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
-                if (userId == 0)
-                {
-                    return Unauthorized(new { message = "Invalid user" });
-                }
-
-                var request = await _borrowingService.CreateBorrowingRequestAsync(userId, requestDto.BookIds);
-                return CreatedAtAction(nameof(GetBorrowingRequestById), new { id = request.Id }, request);
+                var result = await _service.BorrowBooksAsync(dto);
+                return Ok(result);
             }
-            catch (ArgumentException ex)
+            catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { message = ex.Message });
+
+                return BadRequest(new { error = ex.Message });
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BookBorrowingRequest>> GetBorrowingRequestById(int id)
+        [HttpGet("User/{id}/requests")]
+        public async Task<IActionResult> GetAllRequestsForUser(Guid id)
         {
-            var request = await _borrowingService.GetBorrowingRequestByIdAsync(id);
-            if (request == null)
-            {
-                return NotFound();
-            }
-            return Ok(request);
-        }
+            var requests = await _service.GetAllRequestsForUserAsync(id);
 
-        [HttpGet("user")]
-        public async Task<ActionResult<IEnumerable<BookBorrowingRequest>>> GetUserBorrowingRequests()
-        {
-            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
-            var requests = await _borrowingService.GetUserBorrowingRequestsAsync(userId);
             return Ok(requests);
         }
 
-        [HttpGet]
-        [Authorize(Roles = "SuperUser")]
-        public async Task<ActionResult<IEnumerable<BookBorrowingRequest>>> GetAllBorrowingRequests()
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin/requests")]
+        public async Task<IActionResult> GetAllRequestsForAdmin()
         {
-            var requests = await _borrowingService.GetAllBorrowingRequestsAsync();
+            var requests = await _service.GetAllRequestsAsync();
+
             return Ok(requests);
         }
 
-        [HttpPut("{id}/approve")]
-        [Authorize(Roles = "SuperUser")]
-        public async Task<IActionResult> ApproveBorrowingRequest(int id)
+        [Authorize(Roles = "Admin")]
+        [HttpPut("admin/requests/{id}/status")]
+        public async Task<IActionResult> UpdateRequestStatus(Guid id, [FromBody] UpdateBorrowingRequestDTO dto)
         {
             try
             {
-                var approverId = int.Parse(User.FindFirst("id")?.Value ?? "0");
-                await _borrowingService.ApproveBorrowingRequestAsync(id, approverId);
-                return NoContent();
+                var updatedRequest = await _service.UpdateRequestStatusAsync(id, dto);
+                return Ok(updatedRequest);
             }
-            catch (ArgumentException ex)
+            catch (Exception ex)
             {
-                return BadRequest(ex.Message);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Forbid(ex.Message);
-            }
-        }
 
-        [HttpPut("{id}/reject")]
-        [Authorize(Roles = "SuperUser")]
-        public async Task<IActionResult> RejectBorrowingRequest(int id, [FromBody] string reason)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(reason))
-                {
-                    return BadRequest(new { message = "Reason is required" });
-                }
-
-                var approverId = int.Parse(User.FindFirst("id")?.Value ?? "0");
-                if (approverId == 0)
-                {
-                    return Unauthorized(new { message = "Invalid approver" });
-                }
-
-                await _borrowingService.RejectBorrowingRequestAsync(id, approverId, reason);
-                return NoContent();
+                return BadRequest(new { Message = ex.Message });
             }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Forbid(ex.Message);
-            }
-        }
-
-        [HttpPut("{id}/return")]
-        public async Task<IActionResult> ReturnBooks(int id, [FromBody] List<int> bookIds)
-        {
-            try
-            {
-                await _borrowingService.ReturnBooksAsync(id, bookIds);
-                return NoContent();
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet("can-borrow")]
-        public async Task<ActionResult<bool>> CanUserBorrowMoreBooks()
-        {
-            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
-            var canBorrow = await _borrowingService.CanUserBorrowMoreBooksAsync(userId);
-            return Ok(canBorrow);
-        }
-
-        [HttpGet("borrowing-count")]
-        public async Task<ActionResult<int>> GetUserBorrowingCountThisMonth()
-        {
-            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
-            var count = await _borrowingService.GetUserBorrowingCountThisMonthAsync(userId);
-            return Ok(count);
         }
     }
 }

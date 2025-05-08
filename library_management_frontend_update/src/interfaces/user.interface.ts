@@ -6,7 +6,7 @@ export interface User {
   lastName: string;
   fullName: string;
   phoneNumber?: string;
-  role: 'SuperUser' | 'NormalUser';
+  role: 'Admin' | 'NormalUser';
   isActive: boolean;
   lastLoginDate?: string;
   createdAt: string;
@@ -21,7 +21,7 @@ export interface UserCreateDTO {
   firstName: string;
   lastName: string;
   phoneNumber?: string;
-  role: 'SuperUser' | 'NormalUser';
+  role: 'Admin' | 'NormalUser';
 }
 
 export interface UserUpdateDTO {
@@ -31,5 +31,5 @@ export interface UserUpdateDTO {
   firstName?: string;
   lastName?: string;
   phoneNumber?: string;
-  role?: 'SuperUser' | 'NormalUser';
+  role?: 'Admin' | 'NormalUser';
 } 

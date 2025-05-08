@@ -7,11 +7,12 @@ namespace LibraryManagement.Core.Interfaces.Repositories
 {
     public interface IBookBorrowingRequestRepository
     {
-        Task<IEnumerable<BookBorrowingRequest>> GetAllAsync();
-        Task<BookBorrowingRequest> GetByIdAsync(int id);
-        Task<BookBorrowingRequest> AddAsync(BookBorrowingRequest request);
-        Task<BookBorrowingRequest> UpdateAsync(BookBorrowingRequest request);
-        Task<IEnumerable<BookBorrowingRequest>> GetByUserIdAsync(int userId);
-        Task<IEnumerable<BookBorrowingRequest>> GetUserRequestsThisMonthAsync(int userId);
+        Task<List<BookBorrowingRequest>> GetAllRequestsAsync();
+        Task<BookBorrowingRequest?> GetRequestByIdAsync(Guid requestId);
+        Task<List<BookBorrowingRequest>> GetAllRequestsForUserAsync(Guid userId);
+        Task<int> GetMonthlyRequestCountAsync(Guid userId, DateTime monthStart, DateTime monthEnd);
+        Task<BookBorrowingRequest> CreateAsync(BookBorrowingRequest request);
+        Task<List<Book>> GetBooksByIdsAsync(List<Guid> bookIds);
+        Task SaveChangesAsync();
     }
 }

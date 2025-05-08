@@ -4,7 +4,6 @@ using LibraryManagement.Core.Interfaces.Services;
 using LibraryManagement.Core.Interfaces.Repositories;
 using LibraryManagement.Infrastructure.Data;
 using LibraryManagement.Infrastructure.Repositories;
-using LibraryManagement.Infrastructure.Services;
 using LibraryManagement.Application.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +14,11 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using LibraryManagement.Application.Validators;
 using LibraryManagement.Core.DTOs;
+using LibraryManagement.Application.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // Add services to the container.
 builder.Services.AddControllers();
 
@@ -27,26 +28,35 @@ builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
 
 // Add DbContext
 builder.Services.AddDbContext<LibraryDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+        b => b.MigrationsAssembly("LibraryManagement.Infrastructure")
+             .EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(30),
+                errorNumbersToAdd: null));
+    options.EnableSensitiveDataLogging();
+    options.EnableDetailedErrors();
+});
 
 // Add Repositories
-builder.Services.AddScoped<IBookRepository, BookRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<IBorrowRepository, BorrowRepository>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IBookBorrowingRequestRepository, BookBorrowingRequestRepository>();
+builder.Services.AddScoped<IBookBorrowingRequestDetailRepository, BookBorrowingRequestDetailRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+
 
 // Add Services
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IBorrowService, BorrowService>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IEmailSender, EmailSender>();
-builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-builder.Services.AddScoped<IReportGenerator, ReportGenerator>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 
-// Add UnitOfWork
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Add Authentication
 var jwtKey = builder.Configuration["Jwt:Key"];
@@ -75,8 +85,8 @@ builder.Services.AddAuthentication(options =>
 // Add Authorization
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("RequireAdmin", policy => policy.RequireRole("SuperUser"));
-    options.AddPolicy("RequireUser", policy => policy.RequireRole("NormalUser"));
+    options.AddPolicy("RequireAdmin", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("RequireUser", policy => policy.RequireRole("User"));
 });
 
 // Add Swagger
@@ -109,18 +119,34 @@ builder.Services.AddSwaggerGen(c =>
             Array.Empty<string>()
         }
     });
+
+    // Include XML comments
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+    {
+        c.IncludeXmlComments(xmlPath);
+    }
 });
 
 // Add CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp",
-        builder => builder
-            .WithOrigins("http://localhost:3000") // React app URL
+    options.AddDefaultPolicy(builder =>
+    {
+        builder
+            .SetIsOriginAllowed(origin => true) // Cho phép tất cả các origin trong development
             .AllowAnyMethod()
             .AllowAnyHeader()
-            .AllowCredentials());
+            .AllowCredentials();
+    });
 });
+
+// Thêm logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 var app = builder.Build();
 
@@ -128,24 +154,64 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Library Management API V1");
+        c.RoutePrefix = "swagger";
+    });
 }
 
+// Thêm CORS middleware trước các middleware khác
+app.UseCors();
+
+// Tắt HTTPS redirection trong development
 app.UseHttpsRedirection();
 
 // Thêm middleware logging JWT
 app.UseMiddleware<JwtLoggingMiddleware>();
 
-app.UseCors("AllowReactApp");
-
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Thêm logging middleware
+app.Use(async (context, next) =>
+{
+    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+    logger.LogInformation("Request started: {Method} {Path}", context.Request.Method, context.Request.Path);
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred while processing the request");
+        throw;
+    }
+    logger.LogInformation("Request completed: {StatusCode}", context.Response.StatusCode);
+});
+
 app.MapControllers();
+
+// Seed data
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<LibraryDbContext>();
+        var logger = services.GetRequiredService<ILogger<LibraryDbSeeder>>();
+
+        context.Database.Migrate();
+
+        await LibraryDbSeeder.SeedBooksAsync(context, logger);
+        await LibraryDbSeeder.SeedCategoriesAsync(context, logger);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred during database seeding.");
+    }
+}
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

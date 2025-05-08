@@ -7,14 +7,11 @@ namespace LibraryManagement.Core.Interfaces.Repositories
 {
     public interface ICategoryRepository
     {
-        Task<IEnumerable<Category>> GetAllAsync();
-        Task<Category> GetByIdAsync(int id);
-        Task<Category> AddAsync(Category category);
-        Task<Category> UpdateAsync(Category category);
-        Task<bool> DeleteAsync(Category category);
-        Task<bool> ExistsAsync(int id);
-        Task<bool> ExistsByNameAsync(string name);
-        Task<IEnumerable<Book>> GetBooksByCategoryIdAsync(int categoryId);
-        Task<int> GetBookCountAsync(int categoryId);
+        Task<Category?> GetCategoryByIdAsync(Guid id);
+        Task<IEnumerable<Category>> GetAllCategoriesAsync();
+        Task AddCategoryAsync(Category category);
+        Task UpdateCategoryAsync(Category category);
+        Task DeleteCategoryAsync(Category category);
+        Task<bool> CategoryExistsAsync(Guid id);
     }
 }

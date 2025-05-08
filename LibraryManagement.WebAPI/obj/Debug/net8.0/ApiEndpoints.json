@@ -2,7 +2,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.AdminController",
     "Method": "GetBorrowRequests",
-    "RelativePath": "api/admin/Admin/borrow-requests",
+    "RelativePath": "api/admin/borrow-requests",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -18,7 +18,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.AdminController",
     "Method": "ApproveBorrowRequest",
-    "RelativePath": "api/admin/Admin/borrow-requests/{id}/approve",
+    "RelativePath": "api/admin/borrow-requests/{id}/approve",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -34,7 +34,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.AdminController",
     "Method": "RejectBorrowRequest",
-    "RelativePath": "api/admin/Admin/borrow-requests/{id}/reject",
+    "RelativePath": "api/admin/borrow-requests/{id}/reject",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -55,7 +55,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.AdminController",
     "Method": "GetDashboardStats",
-    "RelativePath": "api/admin/Admin/dashboard",
+    "RelativePath": "api/admin/dashboard",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -65,7 +65,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.AdminController",
     "Method": "GenerateReport",
-    "RelativePath": "api/admin/Admin/reports",
+    "RelativePath": "api/admin/reports",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -91,7 +91,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.AdminController",
     "Method": "GetAllUsers",
-    "RelativePath": "api/admin/Admin/users",
+    "RelativePath": "api/admin/users",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -101,7 +101,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.AdminController",
     "Method": "ChangeUserRole",
-    "RelativePath": "api/admin/Admin/users/{id}/role",
+    "RelativePath": "api/admin/users/{id}/role",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -122,7 +122,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.AuthController",
     "Method": "ChangePassword",
-    "RelativePath": "api/Auth/change-password",
+    "RelativePath": "api/auth/change-password",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -138,7 +138,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.AuthController",
     "Method": "Login",
-    "RelativePath": "api/Auth/login",
+    "RelativePath": "api/auth/login",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -154,7 +154,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.AuthController",
     "Method": "Logout",
-    "RelativePath": "api/Auth/logout",
+    "RelativePath": "api/auth/logout",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -170,7 +170,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.AuthController",
     "Method": "RefreshToken",
-    "RelativePath": "api/Auth/refresh",
+    "RelativePath": "api/auth/refresh",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -186,7 +186,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.AuthController",
     "Method": "Register",
-    "RelativePath": "api/Auth/register",
+    "RelativePath": "api/auth/register",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -202,7 +202,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.AuthController",
     "Method": "ResetPassword",
-    "RelativePath": "api/Auth/reset-password",
+    "RelativePath": "api/auth/reset-password",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -218,7 +218,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.BooksController",
     "Method": "GetAllBooks",
-    "RelativePath": "api/Books",
+    "RelativePath": "api/books",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -238,7 +238,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.BooksController",
     "Method": "CreateBook",
-    "RelativePath": "api/Books",
+    "RelativePath": "api/books",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -264,7 +264,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.BooksController",
     "Method": "GetBookById",
-    "RelativePath": "api/Books/{id}",
+    "RelativePath": "api/books/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -290,7 +290,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.BooksController",
     "Method": "UpdateBook",
-    "RelativePath": "api/Books/{id}",
+    "RelativePath": "api/books/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -321,7 +321,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.BooksController",
     "Method": "DeleteBook",
-    "RelativePath": "api/Books/{id}",
+    "RelativePath": "api/books/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -337,7 +337,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.BooksController",
     "Method": "UpdateBookStatus",
-    "RelativePath": "api/Books/{id}/status",
+    "RelativePath": "api/books/{id}/status",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -368,7 +368,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.BooksController",
     "Method": "GetBooksByCategory",
-    "RelativePath": "api/Books/category/{categoryId}",
+    "RelativePath": "api/books/category/{categoryId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -394,7 +394,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.BooksController",
     "Method": "SearchBooks",
-    "RelativePath": "api/Books/search",
+    "RelativePath": "api/books/search",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -418,83 +418,9 @@
     ]
   },
   {
-    "ContainingType": "LibraryManagement.WebAPI.Controllers.BorrowController",
-    "Method": "CreateBorrow",
-    "RelativePath": "api/Borrow",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "LibraryManagement.WebAPI.Controllers.CreateBorrowRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "LibraryManagement.WebAPI.Controllers.BorrowController",
-    "Method": "GetBorrowById",
-    "RelativePath": "api/Borrow/{id}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "LibraryManagement.WebAPI.Controllers.BorrowController",
-    "Method": "CancelBorrow",
-    "RelativePath": "api/Borrow/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "LibraryManagement.WebAPI.Controllers.BorrowController",
-    "Method": "ReturnBook",
-    "RelativePath": "api/Borrow/{id}/return",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "LibraryManagement.WebAPI.Controllers.BorrowController",
-    "Method": "GetMyBorrows",
-    "RelativePath": "api/Borrow/my",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.BorrowingRequestsController",
     "Method": "CreateBorrowingRequest",
-    "RelativePath": "api/BorrowingRequests",
+    "RelativePath": "api/borrow-requests",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -520,7 +446,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.BorrowingRequestsController",
     "Method": "GetAllBorrowingRequests",
-    "RelativePath": "api/BorrowingRequests",
+    "RelativePath": "api/borrow-requests",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -540,7 +466,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.BorrowingRequestsController",
     "Method": "GetBorrowingRequestById",
-    "RelativePath": "api/BorrowingRequests/{id}",
+    "RelativePath": "api/borrow-requests/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -566,7 +492,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.BorrowingRequestsController",
     "Method": "ApproveBorrowingRequest",
-    "RelativePath": "api/BorrowingRequests/{id}/approve",
+    "RelativePath": "api/borrow-requests/{id}/approve",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -582,7 +508,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.BorrowingRequestsController",
     "Method": "RejectBorrowingRequest",
-    "RelativePath": "api/BorrowingRequests/{id}/reject",
+    "RelativePath": "api/borrow-requests/{id}/reject",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -603,7 +529,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.BorrowingRequestsController",
     "Method": "ReturnBooks",
-    "RelativePath": "api/BorrowingRequests/{id}/return",
+    "RelativePath": "api/borrow-requests/{id}/return",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -624,7 +550,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.BorrowingRequestsController",
     "Method": "GetUserBorrowingCountThisMonth",
-    "RelativePath": "api/BorrowingRequests/borrowing-count",
+    "RelativePath": "api/borrow-requests/borrowing-count",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -644,7 +570,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.BorrowingRequestsController",
     "Method": "CanUserBorrowMoreBooks",
-    "RelativePath": "api/BorrowingRequests/can-borrow",
+    "RelativePath": "api/borrow-requests/can-borrow",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -664,7 +590,7 @@
   {
     "ContainingType": "LibraryManagement.WebAPI.Controllers.BorrowingRequestsController",
     "Method": "GetUserBorrowingRequests",
-    "RelativePath": "api/BorrowingRequests/user",
+    "RelativePath": "api/borrow-requests/user",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -680,5 +606,218 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "LibraryManagement.WebAPI.Controllers.CategoryController",
+    "Method": "GetAllCategories",
+    "RelativePath": "api/categories",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[LibraryManagement.Core.Entities.Category, LibraryManagement.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "LibraryManagement.WebAPI.Controllers.CategoryController",
+    "Method": "CreateCategory",
+    "RelativePath": "api/categories",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "categoryDto",
+        "Type": "LibraryManagement.Core.DTOs.CreateCategoryDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "LibraryManagement.Core.Entities.Category",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "LibraryManagement.WebAPI.Controllers.CategoryController",
+    "Method": "GetCategoryById",
+    "RelativePath": "api/categories/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "LibraryManagement.Core.Entities.Category",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "LibraryManagement.WebAPI.Controllers.CategoryController",
+    "Method": "UpdateCategory",
+    "RelativePath": "api/categories/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "categoryDto",
+        "Type": "LibraryManagement.Core.DTOs.UpdateCategoryDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "LibraryManagement.Core.Entities.Category",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "LibraryManagement.WebAPI.Controllers.CategoryController",
+    "Method": "DeleteCategory",
+    "RelativePath": "api/categories/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "LibraryManagement.WebAPI.Controllers.UsersController",
+    "Method": "GetAllUsers",
+    "RelativePath": "api/users",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "LibraryManagement.WebAPI.Controllers.UsersController",
+    "Method": "CreateUser",
+    "RelativePath": "api/users",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "user",
+        "Type": "LibraryManagement.Core.Entities.User",
+        "IsRequired": true
+      },
+      {
+        "Name": "password",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "LibraryManagement.WebAPI.Controllers.UsersController",
+    "Method": "GetUserById",
+    "RelativePath": "api/users/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "LibraryManagement.WebAPI.Controllers.UsersController",
+    "Method": "UpdateUser",
+    "RelativePath": "api/users/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "user",
+        "Type": "LibraryManagement.Core.Entities.User",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "LibraryManagement.WebAPI.Controllers.UsersController",
+    "Method": "DeleteUser",
+    "RelativePath": "api/users/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "LibraryManagement.WebAPI.Controllers.UsersController",
+    "Method": "GetMyBooks",
+    "RelativePath": "api/users/my-books",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   }
 ]

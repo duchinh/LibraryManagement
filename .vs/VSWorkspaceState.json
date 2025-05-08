@@ -1,6 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\LibraryManagement.WebAPI"
   ],
+  "SelectedNode": "\\LibraryManagement.WebAPI\\Program.cs",
   "PreviewInSolutionExplorer": false
 }

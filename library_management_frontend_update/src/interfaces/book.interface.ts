@@ -1,46 +1,27 @@
-export interface Book {
-  id: number;
+export interface BookDto {
+  id: string;
   title: string;
   author: string;
-  isbn: string;
-  category: string;
-  description?: string;
-  status: 'Available' | 'Borrowed' | 'Reserved';
-  quantity: number;
-  availableQuantity: number;
-  publishedYear?: number;
-  publisher?: string;
-  createdAt: string;
-  updatedAt?: string;
-}
-
-export interface Category {
-  id: string;
-  name: string;
-  description?: string;
+  description: string;
+  publicationYear: number;
+  totalCopies: number;
+  availableCopies: number;
+  categoryId: string;
+  categoryName: string;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface BookCreateDTO {
+export interface CreateBookDto {
   title: string;
   author: string;
-  isbn: string;
-  category: string;
-  description?: string;
-  quantity: number;
-  publishedYear?: number;
-  publisher?: string;
+  description: string;
+  publicationYear: number;
+  totalCopies: number;
+  categoryId: string;
 }
 
-export interface BookUpdateDTO {
-  title?: string;
-  author?: string;
-  isbn?: string;
-  category?: string;
-  description?: string;
-  quantity?: number;
-  status?: 'Available' | 'Borrowed' | 'Reserved';
-  publishedYear?: number;
-  publisher?: string;
-} 
+export interface UpdateBookDto extends CreateBookDto {
+  id: string;
+  availableCopies: number;
+}

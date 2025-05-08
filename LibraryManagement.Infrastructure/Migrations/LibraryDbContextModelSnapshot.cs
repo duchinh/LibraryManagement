@@ -17,18 +17,16 @@ namespace LibraryManagement.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("LibraryManagement.Core.Entities.Book", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Author")
                         .IsRequired()
@@ -38,24 +36,26 @@ namespace LibraryManagement.Infrastructure.Migrations
                     b.Property<int>("AvailableQuantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ISBN")
+                    b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Quantity")
+                    b.Property<int>("PublicationYear")
                         .HasColumnType("int");
 
-                    b.Property<int>("Status")
+                    b.Property<string>("Publisher")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -71,54 +71,24 @@ namespace LibraryManagement.Infrastructure.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Books");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Author = "Paulo Coelho",
-                            AvailableQuantity = 10,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2025, 5, 6, 7, 23, 18, 195, DateTimeKind.Utc).AddTicks(2959),
-                            ISBN = "978-604-1-12345-1",
-                            IsDeleted = false,
-                            Quantity = 10,
-                            Status = 0,
-                            Title = "Nhà Giả Kim",
-                            UpdatedAt = new DateTime(2025, 5, 6, 7, 23, 18, 195, DateTimeKind.Utc).AddTicks(3122)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Author = "Stephen Hawking",
-                            AvailableQuantity = 5,
-                            CategoryId = 2,
-                            CreatedAt = new DateTime(2025, 5, 6, 7, 23, 18, 195, DateTimeKind.Utc).AddTicks(3791),
-                            ISBN = "978-604-1-12345-2",
-                            IsDeleted = false,
-                            Quantity = 5,
-                            Status = 0,
-                            Title = "Vũ Trụ Trong Vỏ Hạt Dẻ",
-                            UpdatedAt = new DateTime(2025, 5, 6, 7, 23, 18, 195, DateTimeKind.Utc).AddTicks(3792)
-                        });
                 });
 
             modelBuilder.Entity("LibraryManagement.Core.Entities.BookBorrowingRequest", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ApprovalDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ApproverId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("RejectionReason")
                         .IsRequired()
@@ -128,8 +98,8 @@ namespace LibraryManagement.Infrastructure.Migrations
                     b.Property<DateTime>("RequestDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("RequestorId")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("ReturnedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -137,28 +107,27 @@ namespace LibraryManagement.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ApproverId");
-
-                    b.HasIndex("RequestorId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("BookBorrowingRequests");
                 });
 
             modelBuilder.Entity("LibraryManagement.Core.Entities.BookBorrowingRequestDetail", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("BookBorrowingRequestId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("BookBorrowingRequestId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("BookId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("BorrowDate")
                         .HasColumnType("datetime2");
@@ -171,9 +140,6 @@ namespace LibraryManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("ReturnDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -187,65 +153,11 @@ namespace LibraryManagement.Infrastructure.Migrations
                     b.ToTable("BookBorrowingRequestDetails");
                 });
 
-            modelBuilder.Entity("LibraryManagement.Core.Entities.Borrow", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BookId1")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("BorrowDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ReturnDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("BookId1");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Borrows");
-                });
-
             modelBuilder.Entity("LibraryManagement.Core.Entities.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -255,6 +167,9 @@ namespace LibraryManagement.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -263,88 +178,28 @@ namespace LibraryManagement.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2025, 5, 6, 7, 23, 18, 194, DateTimeKind.Utc).AddTicks(5771),
-                            Description = "Các tác phẩm tiểu thuyết",
-                            IsDeleted = false,
-                            Name = "Tiểu thuyết",
-                            UpdatedAt = new DateTime(2025, 5, 6, 7, 23, 18, 194, DateTimeKind.Utc).AddTicks(5953)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2025, 5, 6, 7, 23, 18, 194, DateTimeKind.Utc).AddTicks(6400),
-                            Description = "Sách về khoa học",
-                            IsDeleted = false,
-                            Name = "Khoa học",
-                            UpdatedAt = new DateTime(2025, 5, 6, 7, 23, 18, 194, DateTimeKind.Utc).AddTicks(6400)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2025, 5, 6, 7, 23, 18, 194, DateTimeKind.Utc).AddTicks(6402),
-                            Description = "Sách về lịch sử",
-                            IsDeleted = false,
-                            Name = "Lịch sử",
-                            UpdatedAt = new DateTime(2025, 5, 6, 7, 23, 18, 194, DateTimeKind.Utc).AddTicks(6402)
-                        });
-                });
-
-            modelBuilder.Entity("LibraryManagement.Core.Entities.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ReviewDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("LibraryManagement.Core.Entities.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -360,20 +215,13 @@ namespace LibraryManagement.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsEmailVerified")
                         .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastLoginDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -406,7 +254,7 @@ namespace LibraryManagement.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -416,27 +264,10 @@ namespace LibraryManagement.Infrastructure.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("Username")
+                    b.HasIndex("UserName")
                         .IsUnique();
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2025, 5, 6, 7, 23, 18, 448, DateTimeKind.Utc).AddTicks(6320),
-                            Email = "admin@library.com",
-                            FirstName = "Admin",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsEmailVerified = false,
-                            LastName = "User",
-                            PasswordHash = "$2a$11$5zEDQpaSDkzyG3M01Z1fa.cCQJJNG3VKlodN3QHYBmj77yR5T0E5q",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2025, 5, 6, 7, 23, 18, 448, DateTimeKind.Utc).AddTicks(6527),
-                            Username = "admin"
-                        });
                 });
 
             modelBuilder.Entity("LibraryManagement.Core.Entities.Book", b =>
@@ -452,34 +283,27 @@ namespace LibraryManagement.Infrastructure.Migrations
 
             modelBuilder.Entity("LibraryManagement.Core.Entities.BookBorrowingRequest", b =>
                 {
-                    b.HasOne("LibraryManagement.Core.Entities.User", "Approver")
-                        .WithMany("ApprovedRequests")
-                        .HasForeignKey("ApproverId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("LibraryManagement.Core.Entities.User", "Requestor")
-                        .WithMany("BorrowingRequests")
-                        .HasForeignKey("RequestorId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("LibraryManagement.Core.Entities.User", "User")
+                        .WithMany("BookBorrowingRequests")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Approver");
-
-                    b.Navigation("Requestor");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LibraryManagement.Core.Entities.BookBorrowingRequestDetail", b =>
                 {
                     b.HasOne("LibraryManagement.Core.Entities.BookBorrowingRequest", "BookBorrowingRequest")
-                        .WithMany("Details")
+                        .WithMany("BookBorrowingRequestDetails")
                         .HasForeignKey("BookBorrowingRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LibraryManagement.Core.Entities.Book", "Book")
-                        .WithMany("BorrowingDetails")
+                        .WithMany("BookBorrowingRequestDetails")
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Book");
@@ -487,58 +311,14 @@ namespace LibraryManagement.Infrastructure.Migrations
                     b.Navigation("BookBorrowingRequest");
                 });
 
-            modelBuilder.Entity("LibraryManagement.Core.Entities.Borrow", b =>
-                {
-                    b.HasOne("LibraryManagement.Core.Entities.Book", "Book")
-                        .WithMany()
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("LibraryManagement.Core.Entities.Book", null)
-                        .WithMany("Borrows")
-                        .HasForeignKey("BookId1");
-
-                    b.HasOne("LibraryManagement.Core.Entities.User", "User")
-                        .WithMany("Borrows")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("LibraryManagement.Core.Entities.Review", b =>
-                {
-                    b.HasOne("LibraryManagement.Core.Entities.Book", "Book")
-                        .WithMany()
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LibraryManagement.Core.Entities.User", "User")
-                        .WithMany("Reviews")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("LibraryManagement.Core.Entities.Book", b =>
                 {
-                    b.Navigation("BorrowingDetails");
-
-                    b.Navigation("Borrows");
+                    b.Navigation("BookBorrowingRequestDetails");
                 });
 
             modelBuilder.Entity("LibraryManagement.Core.Entities.BookBorrowingRequest", b =>
                 {
-                    b.Navigation("Details");
+                    b.Navigation("BookBorrowingRequestDetails");
                 });
 
             modelBuilder.Entity("LibraryManagement.Core.Entities.Category", b =>
@@ -548,13 +328,7 @@ namespace LibraryManagement.Infrastructure.Migrations
 
             modelBuilder.Entity("LibraryManagement.Core.Entities.User", b =>
                 {
-                    b.Navigation("ApprovedRequests");
-
-                    b.Navigation("BorrowingRequests");
-
-                    b.Navigation("Borrows");
-
-                    b.Navigation("Reviews");
+                    b.Navigation("BookBorrowingRequests");
                 });
 #pragma warning restore 612, 618
         }

@@ -12,4 +12,4 @@ namespace LibraryManagement.Core.Interfaces
         Task<byte[]> GenerateCategoryStatisticsReportAsync(string format);
         Task<byte[]> GeneratePopularBooksReportAsync(string format, int topCount);
     }
-} 
+}

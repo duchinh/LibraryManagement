@@ -5,27 +5,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LibraryManagement.Core.Entities
 {
-    public class Category
+    public class Category : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
-
-        [Required]
         [StringLength(100)]
-        public string Name { get; set; }
-
+        public string Name { get; set; } = string.Empty;
         [StringLength(500)]
-        public string Description { get; set; }
-
-        [Required]
+        public string Description { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
-
-        public DateTime? UpdatedAt { get; set; }
-
-        [Required]
+        public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
-
-        // Navigation properties
-        public ICollection<Book> Books { get; set; }
+        public bool IsActive { get; set; }
+        public ICollection<Book> Books { get; set; } = [];
     }
 }

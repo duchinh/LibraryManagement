@@ -6,70 +6,65 @@ using Microsoft.EntityFrameworkCore;
 using LibraryManagement.Core.Entities;
 using LibraryManagement.Core.Interfaces.Repositories;
 using LibraryManagement.Infrastructure.Data;
+using LibraryManagement.Core.Enums;
 
 namespace LibraryManagement.Infrastructure.Repositories
 {
-    public class BookBorrowingRequestRepository : IBookBorrowingRequestRepository
+    public class BookBorrowingRequestRepository(LibraryDbContext context) : IBookBorrowingRequestRepository
     {
-        private readonly LibraryDbContext _context;
+        private readonly LibraryDbContext _context = context;
 
-        public BookBorrowingRequestRepository(LibraryDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<IEnumerable<BookBorrowingRequest>> GetAllAsync()
+        public async Task<List<BookBorrowingRequest>> GetAllRequestsAsync()
         {
             return await _context.BookBorrowingRequests
-                .Include(r => r.Requestor)
-                .Include(r => r.Approver)
-                .Include(r => r.Details)
-                    .ThenInclude(d => d.Book)
+                .Include(r => r.User)
+                .Include(r => r.BookBorrowingRequestDetails)
+                .ThenInclude(d => d.Book)
                 .ToListAsync();
         }
 
-        public async Task<BookBorrowingRequest> GetByIdAsync(int id)
+        public async Task<BookBorrowingRequest?> GetRequestByIdAsync(Guid requestId)
         {
             return await _context.BookBorrowingRequests
-                .Include(r => r.Requestor)
-                .Include(r => r.Approver)
-                .Include(r => r.Details)
-                    .ThenInclude(d => d.Book)
-                .FirstOrDefaultAsync(r => r.Id == id);
+                .Include(r => r.BookBorrowingRequestDetails)
+                .FirstOrDefaultAsync(r => r.Id == requestId);
         }
 
-        public async Task<BookBorrowingRequest> AddAsync(BookBorrowingRequest request)
+        public async Task<int> GetMonthlyRequestCountAsync(Guid userId, DateTime monthStart, DateTime monthEnd)
+        {
+            return await _context.BookBorrowingRequests
+                .Where(r => r.UserId == userId
+                    && r.RequestDate >= monthStart
+                    && r.RequestDate <= monthEnd
+                    && r.Status == RequestStatus.Approved || r.Status == RequestStatus.Waiting)
+                .CountAsync();
+        }
+
+        public async Task<List<BookBorrowingRequest>> GetAllRequestsForUserAsync(Guid userId)
+        {
+            return await _context.BookBorrowingRequests
+                .Where(r => r.UserId == userId)
+                .Include(r => r.BookBorrowingRequestDetails)
+                .ThenInclude(d => d.Book)
+                .ToListAsync();
+        }
+
+        public async Task<BookBorrowingRequest> CreateAsync(BookBorrowingRequest request)
         {
             await _context.BookBorrowingRequests.AddAsync(request);
-            await _context.SaveChangesAsync();
             return request;
         }
 
-        public async Task<BookBorrowingRequest> UpdateAsync(BookBorrowingRequest request)
+        public async Task<List<Book>> GetBooksByIdsAsync(List<Guid> bookIds)
         {
-            _context.BookBorrowingRequests.Update(request);
+            return await _context.Books
+                .Where(b => bookIds.Contains(b.Id))
+                .ToListAsync();
+        }
+
+        public async Task SaveChangesAsync()
+        {
             await _context.SaveChangesAsync();
-            return request;
-        }
-
-        public async Task<IEnumerable<BookBorrowingRequest>> GetByUserIdAsync(int userId)
-        {
-            return await _context.BookBorrowingRequests
-                .Include(r => r.Requestor)
-                .Include(r => r.Approver)
-                .Include(r => r.Details)
-                    .ThenInclude(d => d.Book)
-                .Where(r => r.RequestorId == userId)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<BookBorrowingRequest>> GetUserRequestsThisMonthAsync(int userId)
-        {
-            var startOfMonth = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
-            return await _context.BookBorrowingRequests
-                .Where(r => r.RequestorId == userId &&
-                           r.RequestDate >= startOfMonth)
-                .ToListAsync();
         }
     }
 }

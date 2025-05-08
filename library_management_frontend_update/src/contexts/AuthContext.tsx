@@ -1,65 +1,86 @@
-import React, { useState, useEffect } from 'react';
-import { User } from '../interfaces/user.interface';
-import { LoginResponse } from '../interfaces/auth.interface';
-import { api } from '../constants/api';
+import { jwtDecode } from "jwt-decode";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
-interface AuthContextType {
-  user: User | null;
-  token: string | null;
-  refreshToken: string | null;
-  login: (response: LoginResponse) => void;
-  logout: () => void;
-  isAuthenticated: boolean;
+interface JwtPayload {
+  Role?: string;
+  exp?: number;
 }
 
-const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
+interface AuthContextType {
+  isAuthenticated: boolean;
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  userRole: string | null;
+  setUserRole: React.Dispatch<React.SetStateAction<string | null>>;
+  isLoading: boolean;
+  logout: () => Promise<void>;
+}
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [refreshToken, setRefreshToken] = useState<string | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+const AuthContext = createContext<AuthContextType>({
+  isAuthenticated: false,
+  setIsAuthenticated: () => {},
+  userRole: null,
+  setUserRole: () => {},
+  isLoading: true,
+  logout: async () => {},
+});
+
+export const useAuthContext = () => useContext(AuthContext);
+
+const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const token = localStorage.getItem("token");
+  const [isAuthenticated, setIsAuthenticated] = useState(!!token);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('accessToken');
-    const storedRefreshToken = localStorage.getItem('refreshToken');
-    if (storedToken && storedRefreshToken) {
-      setToken(storedToken);
-      setRefreshToken(storedRefreshToken);
-      setIsAuthenticated(true);
-      // TODO: Fetch user info
-    }
-  }, []);
+    if (token) {
+      try {
+        const decoded = jwtDecode<JwtPayload>(token);
 
-  const login = (response: LoginResponse) => {
-    localStorage.setItem('accessToken', response.accessToken);
-    localStorage.setItem('refreshToken', response.refreshToken);
-    setToken(response.accessToken);
-    setRefreshToken(response.refreshToken);
-    setUser(response.user);
-    setIsAuthenticated(true);
+        if (decoded.exp && Date.now() >= decoded.exp * 1000) {
+          localStorage.removeItem("token");
+          setIsAuthenticated(false);
+          setUserRole(null);
+        } else {
+          const role = decoded.Role;
+          setIsAuthenticated(true);
+          setUserRole(role || null);
+        }
+      } catch (err) {
+        console.error("Invalid token");
+        localStorage.removeItem("token");
+        setIsAuthenticated(false);
+        setUserRole(null);
+      }
+    }
+    setIsLoading(false);
+  }, [token]);
+
+  const logout = async () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    setIsAuthenticated(false);
+    setUserRole(null);
   };
 
-  const logout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    setToken(null);
-    setRefreshToken(null);
-    setUser(null);
-    setIsAuthenticated(false);
+  const contextValue = {
+    isAuthenticated,
+    setIsAuthenticated,
+    userRole,
+    setUserRole,
+    isLoading,
+    logout,
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, refreshToken, login, logout, isAuthenticated }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
-}
+};
 
-export function useAuth() {
-  const context = React.useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-}
+export default AuthProvider;

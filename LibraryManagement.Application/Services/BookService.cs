@@ -6,136 +6,88 @@ using LibraryManagement.Core.Entities;
 using LibraryManagement.Core.Interfaces.Repositories;
 using LibraryManagement.Core.Interfaces.Services;
 using LibraryManagement.Core.DTOs;
+using AutoMapper;
+using Microsoft.Extensions.Logging;
 
 namespace LibraryManagement.Application.Services
 {
     public class BookService : IBookService
     {
         private readonly IBookRepository _bookRepository;
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly IMapper _mapper;
+        private readonly ILogger<BookService> _logger;
 
-        public BookService(IBookRepository bookRepository, ICategoryRepository categoryRepository)
+        public BookService(IBookRepository bookRepository, IMapper mapper, ILogger<BookService> logger)
         {
             _bookRepository = bookRepository;
-            _categoryRepository = categoryRepository;
+            _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<IEnumerable<Book>> GetAllBooksAsync()
+        public async Task<IEnumerable<BookDTO>> GetAllBooksAsync()
         {
-            return await _bookRepository.GetAllAsync();
-        }
-
-        public async Task<Book> GetBookByIdAsync(int id)
-        {
-            return await _bookRepository.GetByIdAsync(id);
-        }
-
-        public async Task<Book> CreateBookAsync(CreateBookDTO bookDto)
-        {
-            // Kiểm tra ISBN trùng lặp
-            var existingBook = await _bookRepository.GetByISBNAsync(bookDto.ISBN);
-            if (existingBook != null)
+            try
             {
-                throw new InvalidOperationException("ISBN đã tồn tại trong hệ thống");
+                _logger.LogInformation("Getting all books");
+                var books = await _bookRepository.GetAllBooksAsync();
+                if (books == null || !books.Any())
+                {
+                    _logger.LogWarning("No books found");
+                    return new List<BookDTO>();
+                }
+                return _mapper.Map<IEnumerable<BookDTO>>(books);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while getting all books");
+                throw;
+            }
+        }
+
+        public async Task<BookDTO> GetBookByIdAsync(Guid id)
+        {
+            var book = await _bookRepository.GetBookByIdAsync(id);
+            if (book == null)
+            {
+                throw new ArgumentException("Book not found");
             }
 
-            // Kiểm tra danh mục
-            var category = await _categoryRepository.GetByIdAsync(bookDto.CategoryId);
-            if (category == null)
-            {
-                throw new ArgumentException("Danh mục không tồn tại");
-            }
-
-            var book = new Book
-            {
-                Title = bookDto.Title,
-                Author = bookDto.Author,
-                ISBN = bookDto.ISBN,
-                CategoryId = bookDto.CategoryId,
-                Category = category,
-                Publisher = bookDto.Publisher,
-                PublicationYear = bookDto.PublicationYear,
-                Quantity = bookDto.Quantity,
-                AvailableQuantity = bookDto.Quantity,
-                Description = bookDto.Description,
-                Status = BookStatus.Available,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            return await _bookRepository.AddAsync(book);
+            return _mapper.Map<BookDTO>(book);
         }
 
-        public async Task<Book> UpdateBookAsync(int id, UpdateBookDTO bookDto)
+        public async Task<BookDTO> CreateBookAsync(CreateBookDTO bookDto)
         {
-            var book = await _bookRepository.GetByIdAsync(id);
+
+            var book = _mapper.Map<Book>(bookDto);
+            book.AvailableQuantity = book.Quantity;
+
+            await _bookRepository.AddBookAsync(book);
+            return _mapper.Map<BookDTO>(book);
+        }
+
+        public async Task<BookDTO> UpdateBookAsync(Guid id, UpdateBookDTO bookDto)
+        {
+            var book = await _bookRepository.GetBookByIdAsync(id);
             if (book == null)
             {
                 throw new ArgumentException("Không tìm thấy sách");
             }
 
-            // Kiểm tra ISBN trùng lặp nếu ISBN thay đổi
-            if (book.ISBN != bookDto.ISBN)
-            {
-                var existingBook = await _bookRepository.GetByISBNAsync(bookDto.ISBN);
-                if (existingBook != null)
-                {
-                    throw new InvalidOperationException("ISBN đã tồn tại trong hệ thống");
-                }
-            }
-
-            // Kiểm tra danh mục
-            var category = await _categoryRepository.GetByIdAsync(bookDto.CategoryId);
-            if (category == null)
-            {
-                throw new ArgumentException("Danh mục không tồn tại");
-            }
-
-            book.Title = bookDto.Title;
-            book.Author = bookDto.Author;
-            book.ISBN = bookDto.ISBN;
-            book.CategoryId = bookDto.CategoryId;
-            book.Publisher = bookDto.Publisher;
-            book.PublicationYear = bookDto.PublicationYear;
-            book.Quantity = bookDto.Quantity;
-            book.Description = bookDto.Description;
+            _mapper.Map(bookDto, book);
             book.UpdatedAt = DateTime.UtcNow;
+            await _bookRepository.UpdateBookAsync(book);
 
-            return await _bookRepository.UpdateAsync(book);
+            return _mapper.Map<BookDTO>(book);
         }
 
-        public async Task<bool> DeleteBookAsync(int id)
+        public async Task<bool> DeleteBookAsync(Guid id)
         {
-            var book = await _bookRepository.GetByIdAsync(id);
-            if (book == null)
-            {
-                throw new ArgumentException("Book not found");
-            }
+            var book = await _bookRepository.GetBookByIdAsync(id);
+            if (book == null) return false;
 
-            return await _bookRepository.DeleteAsync(book);
-        }
+            await _bookRepository.DeleteBookAsync(book);
 
-        public async Task<Book> UpdateBookStatusAsync(int id, BookStatus status)
-        {
-            var book = await _bookRepository.GetByIdAsync(id);
-            if (book == null)
-            {
-                throw new ArgumentException("Book not found");
-            }
-
-            book.Status = status;
-            book.UpdatedAt = DateTime.UtcNow;
-
-            return await _bookRepository.UpdateAsync(book);
-        }
-
-        public async Task<IEnumerable<Book>> GetBooksByCategoryAsync(int categoryId)
-        {
-            return await _bookRepository.GetByCategoryIdAsync(categoryId);
-        }
-
-        public async Task<IEnumerable<Book>> SearchBooksAsync(string searchTerm)
-        {
-            return await _bookRepository.SearchAsync(searchTerm);
+            return true;
         }
     }
 }

@@ -1,0 +1,8 @@
+# Ignore LibraryApp directory
+LibraryApp/
+
+# Ignore Visual Studio temporary files, build results, etc.
+.vs/
+
+# Ignore Directory.Build.props file
+Directory.Build.props

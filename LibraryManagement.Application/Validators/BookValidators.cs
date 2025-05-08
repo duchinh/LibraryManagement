@@ -15,17 +15,17 @@ namespace LibraryManagement.Application.Validators
                 .NotEmpty().WithMessage("Tác giả không được để trống")
                 .MaximumLength(100).WithMessage("Tên tác giả không được vượt quá 100 ký tự");
 
-            RuleFor(x => x.ISBN)
-                .NotEmpty().WithMessage("ISBN không được để trống")
-                .Matches(@"^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$")
-                .WithMessage("ISBN không hợp lệ");
+            // RuleFor(x => x.ISBN)
+            //     .NotEmpty().WithMessage("ISBN không được để trống")
+            //     .Matches(@"^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$")
+            //     .WithMessage("ISBN không hợp lệ");
 
             RuleFor(x => x.CategoryId)
                 .NotEmpty().WithMessage("Danh mục không được để trống");
 
-            RuleFor(x => x.Publisher)
-                .NotEmpty().WithMessage("Nhà xuất bản không được để trống")
-                .MaximumLength(100).WithMessage("Tên nhà xuất bản không được vượt quá 100 ký tự");
+            // RuleFor(x => x.Publisher)
+            //     .NotEmpty().WithMessage("Nhà xuất bản không được để trống")
+            //     .MaximumLength(100).WithMessage("Tên nhà xuất bản không được vượt quá 100 ký tự");
 
             RuleFor(x => x.PublicationYear)
                 .NotEmpty().WithMessage("Năm xuất bản không được để trống")
@@ -53,17 +53,17 @@ namespace LibraryManagement.Application.Validators
                 .NotEmpty().WithMessage("Tác giả không được để trống")
                 .MaximumLength(100).WithMessage("Tên tác giả không được vượt quá 100 ký tự");
 
-            RuleFor(x => x.ISBN)
-                .NotEmpty().WithMessage("ISBN không được để trống")
-                .Matches(@"^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$")
-                .WithMessage("ISBN không hợp lệ");
+            // RuleFor(x => x.ISBN)
+            //     .NotEmpty().WithMessage("ISBN không được để trống")
+            //     .Matches(@"^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$")
+            //     .WithMessage("ISBN không hợp lệ");
 
             RuleFor(x => x.CategoryId)
                 .NotEmpty().WithMessage("Danh mục không được để trống");
 
-            RuleFor(x => x.Publisher)
-                .NotEmpty().WithMessage("Nhà xuất bản không được để trống")
-                .MaximumLength(100).WithMessage("Tên nhà xuất bản không được vượt quá 100 ký tự");
+            // RuleFor(x => x.Publisher)
+            //     .NotEmpty().WithMessage("Nhà xuất bản không được để trống")
+            //     .MaximumLength(100).WithMessage("Tên nhà xuất bản không được vượt quá 100 ký tự");
 
             RuleFor(x => x.PublicationYear)
                 .NotEmpty().WithMessage("Năm xuất bản không được để trống")

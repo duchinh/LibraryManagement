@@ -2,54 +2,39 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using LibraryManagement.Core.Enums;
 namespace LibraryManagement.Core.Entities
 {
-    public class BookBorrowingRequest
+    public class BookBorrowingRequest : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
-
         [Required]
-        public int RequestorId { get; set; }
+        public Guid UserId { get; set; }
 
-        [ForeignKey("RequestorId")]
-        public User Requestor { get; set; }
-
-        public int? ApproverId { get; set; }
-
-        [ForeignKey("ApproverId")]
-        public User Approver { get; set; }
+        [ForeignKey("UserId")]
+        public User User { get; set; } = null!;
 
         [Required]
         public DateTime RequestDate { get; set; }
 
         public DateTime? ApprovalDate { get; set; }
 
-        public DateTime? ProcessedDate { get; set; }
+        public DateTime? ReturnedDate { get; set; }
 
         [Required]
-        public BorrowingRequestStatus Status { get; set; }
+        public RequestStatus Status { get; set; } = RequestStatus.Waiting;
 
         [StringLength(500)]
-        public string RejectionReason { get; set; }
+        public string Note { get; set; } = string.Empty;
+        [StringLength(500)]
+        public string RejectionReason { get; set; } = string.Empty;
 
         [Required]
         public DateTime CreatedAt { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
 
-        [Required]
-        public bool IsDeleted { get; set; }
-
         // Navigation properties
-        public ICollection<BookBorrowingRequestDetail> Details { get; set; }
+        public ICollection<BookBorrowingRequestDetail> BookBorrowingRequestDetails { get; set; } = [];
     }
 
-    public enum BorrowingRequestStatus
-    {
-        Pending,
-        Approved,
-        Rejected
-    }
 }

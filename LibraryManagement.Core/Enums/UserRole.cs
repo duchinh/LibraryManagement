@@ -1,8 +1,8 @@
-namespace LibraryManagement.Core.Entities
+namespace LibraryManagement.Core.Enums
 {
     public enum UserRole
     {
-        NormalUser,
-        SuperUser
+        User,
+        Admin
     }
 }

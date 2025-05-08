@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { Book } from '../types/book';
+import { BorrowRequest } from '../interfaces/borrow.interface';
 
 export const validateUsername = (username: string): boolean => {
   if (!username) {
@@ -198,13 +198,11 @@ export const validateRejectReason = (reason: string): boolean => {
   return true;
 };
 
-export const validateOverdueBooks = (books: Book[]): boolean => {
-  const now = new Date();
-  const overdueBooks = books.filter(book => 
-    book.dueDate && new Date(book.dueDate) < now
-  );
+export const validateOverdueBooks = (books: BorrowRequest[]): boolean => {
+  const today = new Date();
+  const overdueBooks = books.filter(book => new Date(book.dueDate) < today);
   if (overdueBooks.length > 0) {
-    message.error('Bạn có sách đã quá hạn, vui lòng trả sách trước khi mượn sách mới');
+    message.error('Bạn có sách quá hạn trả. Vui lòng trả sách trước khi mượn sách mới.');
     return false;
   }
   return true;
@@ -220,20 +218,17 @@ export const validateMonthlyBorrowing = (count: number): boolean => {
 
 export const validateBorrowingRequest = async (
   bookIds: number[],
-  currentBorrowings: Book[],
+  currentBorrowings: BorrowRequest[],
   monthlyBorrowingCount: number
 ): Promise<boolean> => {
-  // Kiểm tra số lượng sách
   if (!validateBookIds(bookIds)) {
     return false;
   }
 
-  // Kiểm tra sách quá hạn
   if (!validateOverdueBooks(currentBorrowings)) {
     return false;
   }
 
-  // Kiểm tra số lần mượn trong tháng
   if (!validateMonthlyBorrowing(monthlyBorrowingCount)) {
     return false;
   }

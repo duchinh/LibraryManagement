@@ -4,25 +4,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LibraryManagement.Core.Entities
 {
-    public class BookBorrowingRequestDetail
+    public class BookBorrowingRequestDetail : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
-
         [Required]
-        public int BookBorrowingRequestId { get; set; }
+        public Guid BookBorrowingRequestId { get; set; }
 
         [ForeignKey("BookBorrowingRequestId")]
-        public BookBorrowingRequest BookBorrowingRequest { get; set; }
+        public BookBorrowingRequest BookBorrowingRequest { get; set; } = null!;
 
         [Required]
-        public int BookId { get; set; }
+        public Guid BookId { get; set; }
 
         [ForeignKey("BookId")]
-        public Book Book { get; set; }
-
-        [Required]
-        public int Quantity { get; set; }
+        public Book Book { get; set; } = null!;
 
         [Required]
         public DateTime BorrowDate { get; set; }
@@ -33,21 +27,10 @@ namespace LibraryManagement.Core.Entities
         public DateTime? ReturnDate { get; set; }
 
         [Required]
-        public BorrowingDetailStatus Status { get; set; }
-
-        [Required]
         public DateTime CreatedAt { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
 
-        [Required]
-        public bool IsDeleted { get; set; }
     }
 
-    public enum BorrowingDetailStatus
-    {
-        Borrowed,
-        Returned,
-        Overdue
-    }
 }

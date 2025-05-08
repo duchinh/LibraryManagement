@@ -1,84 +1,60 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import PrivateRoute from '../components/auth/PrivateRoute';
-import Login from '../pages/auth/Login';
-import Register from '../pages/auth/Register';
-import UserDashboard from '../pages/user/Dashboard';
-import AdminDashboard from '../pages/admin/Dashboard';
-import BookList from '../pages/books/BookList';
-import BookDetail from '../pages/books/BookDetail';
-import BorrowRequests from '../pages/borrow/BorrowRequests';
-import MyBorrowedBooks from '../pages/borrow/MyBorrowedBooks';
-import Profile from '../pages/user/Profile';
-import NotFound from '../pages/NotFound';
+import AdminLayout from "../components/layout/AdminLayout";
+import AppLayout from "../components/layout/AppLayout";
+import PermissionRoute from "../components/PermissionRoute";
+import ProtectedRoute from "../components/ProtectedRoute";
+import AdminDashboard from "../pages/admin/AdminDashboard";
+import BookManagePage from "../pages/books/BookManagePage";
+import BorrowRequestPage from "../pages/borrow/BorrowRequestPage";
+import BorrowRequestsManagePage from "../pages/borrow/BorrowRequestsManagePage";
+import CategoryManagePage from "../pages/category/CategoryManagePage";
+import HomePage from "../pages/home/HomePage";
+import LoginPage from "../pages/auth/LoginPage";
+import RegisterPage from "../pages/auth/RegisterPage";
+import UnauthorizedPage from "../pages/auth/UnauthorizedPage";
+import UserManagePage from "../pages/user/UserManagePage";
 
-export default function AppRouter() {
-  return (
-    <Routes>
-      {/* Public routes */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+const pathname = {
+  home: "/",
+  login: "/login",
+  register: "/register",
+  borrowRequest: "/borrow-request",
+  adminUser: "/admin/users",
+  adminBook: "/admin/books",
+  adminCategory: "/admin/categories",
+  adminDashboard: "/admin/dashboard",
+  adminRequest: "admin/requests",
+  unauthorized: "/unauthorized",
+};
 
-      {/* Protected routes */}
-      <Route
-        path="/"
-        element={
-          <PrivateRoute>
-            <UserDashboard />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/admin/dashboard"
-        element={
-          <PrivateRoute requiredRole="SuperUser">
-            <AdminDashboard />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/books"
-        element={
-          <PrivateRoute>
-            <BookList />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/books/:id"
-        element={
-          <PrivateRoute>
-            <BookDetail />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/admin/borrow-requests"
-        element={
-          <PrivateRoute requiredRole="SuperUser">
-            <BorrowRequests />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/borrow-requests"
-        element={
-          <PrivateRoute>
-            <MyBorrowedBooks />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/profile"
-        element={
-          <PrivateRoute>
-            <Profile />
-          </PrivateRoute>
-        }
-      />
-
-      {/* 404 route */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  );
-} 
+export const AppRouters = [
+  { path: pathname.login, element: <LoginPage /> },
+  { path: pathname.register, element: <RegisterPage /> },
+  { path: pathname.unauthorized, element: <UnauthorizedPage /> },
+  {
+    element: (
+      <ProtectedRoute>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      { path: pathname.borrowRequest, element: <BorrowRequestPage /> },
+      { path: pathname.home, element: <HomePage /> },
+    ],
+  },
+  {
+    element: (
+      <ProtectedRoute>
+        <PermissionRoute allowedRoles={["Admin"]}>
+          <AdminLayout />
+        </PermissionRoute>
+      </ProtectedRoute>
+    ),
+    children: [
+      { path: pathname.adminUser, element: <UserManagePage /> },
+      { path: pathname.adminRequest, element: <BorrowRequestsManagePage /> },
+      { path: pathname.adminDashboard, element: <AdminDashboard /> },
+      { path: pathname.adminCategory, element: <CategoryManagePage /> },
+      { path: pathname.adminBook, element: <BookManagePage /> },
+    ],
+  },
+];

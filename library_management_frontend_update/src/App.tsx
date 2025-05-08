@@ -1,24 +1,20 @@
-import { BrowserRouter as Router } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import AppRouter from './routers';
+import { useRoutes } from "react-router-dom";
+import { AppRouters } from "./routers";
+import AuthProvider from "./contexts/AuthContext";
+import { Toaster } from "react-hot-toast";
+import UserProvider from "./contexts/UserContext";
 
 function App() {
+  let element = useRoutes(AppRouters);
   return (
-    <Router>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      <AppRouter />
-    </Router>
+    <div className="App">
+      <AuthProvider>
+        <UserProvider>
+          <Toaster />
+          {element}
+        </UserProvider>
+      </AuthProvider>
+    </div>
   );
 }
 

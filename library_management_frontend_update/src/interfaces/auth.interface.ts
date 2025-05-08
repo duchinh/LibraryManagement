@@ -1,45 +1,29 @@
-import { User } from './user.interface';
-
-export interface LoginRequest {
-  username: string;
-  password: string;
-}
-
-export interface RegisterRequest {
-  username: string;
+export interface LoginRequestDto {
   email: string;
   password: string;
-  fullName: string;
-  phone?: string;
 }
 
-export interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: User;
-}
-
-export interface RegisterResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: User;
-}
-
-export interface ApiResponse<T> {
-  data: T;
-  message?: string;
-  status: number;
-}
-
-export interface ChangePasswordRequest {
-  currentPassword: string;
-  newPassword: string;
-}
-
-export interface RefreshTokenRequest {
-  refreshToken: string;
-}
-
-export interface ResetPasswordRequest {
+export interface RegisterRequestDto {
   email: string;
-} 
+  password: string;
+  confirmPassword: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  address: string;
+  dateOfBirth: string;
+}
+
+export interface AuthResponseDto {
+  token: string;
+  refreshToken: string;
+  user: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+  };
+}
+
+

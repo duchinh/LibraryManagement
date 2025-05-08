@@ -18,78 +18,37 @@ namespace LibraryManagement.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Category>> GetAllAsync()
+        public async Task<Category?> GetCategoryByIdAsync(Guid id)
         {
-            return await _context.Categories
-                .Include(c => c.Books)
-                .ToListAsync();
+            return await _context.Categories.FindAsync(id);
         }
 
-        public async Task<Category> GetByIdAsync(int id)
+        public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
-            return await _context.Categories
-                .Include(c => c.Books)
-                .FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.Categories.ToListAsync();
         }
 
-        public async Task<Category> AddAsync(Category category)
+        public async Task AddCategoryAsync(Category category)
         {
             await _context.Categories.AddAsync(category);
             await _context.SaveChangesAsync();
-            return category;
         }
 
-        public async Task<Category> UpdateAsync(Category category)
+        public async Task UpdateCategoryAsync(Category category)
         {
-            _context.Entry(category).State = EntityState.Modified;
+            _context.Categories.Update(category);
             await _context.SaveChangesAsync();
-            return category;
         }
 
-        public async Task<bool> DeleteAsync(Category category)
+        public async Task DeleteCategoryAsync(Category category)
         {
-            try
-            {
-                _context.Categories.Remove(category);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> ExistsAsync(int id)
+        public async Task<bool> CategoryExistsAsync(Guid id)
         {
             return await _context.Categories.AnyAsync(c => c.Id == id);
-        }
-
-        public async Task<bool> ExistsByNameAsync(string name)
-        {
-            return await _context.Categories.AnyAsync(c => c.Name == name);
-        }
-
-        public async Task<IEnumerable<Book>> GetBooksByCategoryIdAsync(int categoryId)
-        {
-            return await _context.Books
-                .Where(b => b.CategoryId == categoryId)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Category>> SearchAsync(string keyword)
-        {
-            return await _context.Categories
-                .Where(c => c.Name.Contains(keyword) ||
-                           c.Description.Contains(keyword))
-                .Include(c => c.Books)
-                .ToListAsync();
-        }
-
-        public async Task<int> GetBookCountAsync(int categoryId)
-        {
-            return await _context.Books
-                .CountAsync(b => b.CategoryId == categoryId);
         }
     }
 }

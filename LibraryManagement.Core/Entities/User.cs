@@ -2,58 +2,41 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using LibraryManagement.Core.Entities;
+using LibraryManagement.Core.Enums;
 
 namespace LibraryManagement.Core.Entities
 {
-    public class User
+    public class User : BaseEntity
     {
-        public User()
-        {
-            Borrows = new List<Borrow>();
-            Reviews = new List<Review>();
-            BorrowingRequests = new List<BookBorrowingRequest>();
-            ApprovedRequests = new List<BookBorrowingRequest>();
-            CreatedAt = DateTime.Now;
-            IsActive = true;
-            IsDeleted = false;
-        }
 
-        [Key]
-        public int Id { get; set; }
-
-        [Required]
         [StringLength(50)]
-        public required string Username { get; set; }
+        public string UserName { get; set; } = string.Empty;
 
-        [Required]
-        public required string PasswordHash { get; set; }
+        public string PasswordHash { get; set; } = string.Empty;
 
         [Required]
         [StringLength(100)]
         [EmailAddress]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         [Required]
         [StringLength(50)]
-        public string FirstName { get; set; }
+        public string FirstName { get; set; } = string.Empty;
 
         [Required]
         [StringLength(50)]
-        public string LastName { get; set; }
+        public string LastName { get; set; } = string.Empty;
 
-        public string FullName => $"{FirstName} {LastName}";
 
         [StringLength(20)]
         public string? PhoneNumber { get; set; }
+        public DateTime DateOfBirth { get; set; }
 
         [Required]
-        public UserRole Role { get; set; }
+        public UserRole Role { get; set; } = UserRole.User;
 
         [Required]
         public bool IsActive { get; set; }
-
-        public DateTime? LastLoginDate { get; set; }
 
         [Required]
         public bool IsDeleted { get; set; }
@@ -76,9 +59,7 @@ namespace LibraryManagement.Core.Entities
         public DateTime? RefreshTokenExpiresAt { get; set; }
 
         // Navigation properties
-        public ICollection<Borrow> Borrows { get; set; }
-        public ICollection<Review> Reviews { get; set; }
-        public ICollection<BookBorrowingRequest> BorrowingRequests { get; set; }
-        public ICollection<BookBorrowingRequest> ApprovedRequests { get; set; }
+        public ICollection<BookBorrowingRequest> BookBorrowingRequests { get; set; } = [];
+
     }
 }

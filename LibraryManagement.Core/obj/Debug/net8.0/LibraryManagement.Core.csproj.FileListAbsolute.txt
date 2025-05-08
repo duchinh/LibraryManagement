@@ -18,6 +18,7 @@ D:\CSharp\MidAssignment2\LibraryManagement.Core\obj\Debug\net8.0\LibraryManageme
 D:\CSharp\MidAssignment2\LibraryManagement.Core\obj\Debug\net8.0\LibraryManagement.Core.AssemblyInfoInputs.cache
 D:\CSharp\MidAssignment2\LibraryManagement.Core\obj\Debug\net8.0\LibraryManagement.Core.AssemblyInfo.cs
 D:\CSharp\MidAssignment2\LibraryManagement.Core\obj\Debug\net8.0\LibraryManagement.Core.csproj.CoreCompileInputs.cache
+D:\CSharp\MidAssignment2\LibraryManagement.Core\obj\Debug\net8.0\LibraryManagement.Core.sourcelink.json
 D:\CSharp\MidAssignment2\LibraryManagement.Core\obj\Debug\net8.0\LibraryManagement.Core.dll
 D:\CSharp\MidAssignment2\LibraryManagement.Core\obj\Debug\net8.0\refint\LibraryManagement.Core.dll
 D:\CSharp\MidAssignment2\LibraryManagement.Core\obj\Debug\net8.0\LibraryManagement.Core.pdb

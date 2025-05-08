@@ -1,4 +1,3 @@
-D:\CSharp\MidAssignment2\LibraryManagement.WebAPI\bin\Debug\net8.0\appsettings.Development.json
 D:\CSharp\MidAssignment2\LibraryManagement.WebAPI\bin\Debug\net8.0\appsettings.json
 D:\CSharp\MidAssignment2\LibraryManagement.WebAPI\bin\Debug\net8.0\LibraryManagement.WebAPI.staticwebassets.endpoints.json
 D:\CSharp\MidAssignment2\LibraryManagement.WebAPI\bin\Debug\net8.0\LibraryManagement.WebAPI.exe
@@ -177,4 +176,12 @@ D:\CSharp\MidAssignment2\LibraryManagement.WebAPI\obj\Debug\net8.0\refint\Librar
 D:\CSharp\MidAssignment2\LibraryManagement.WebAPI\obj\Debug\net8.0\LibraryManagement.WebAPI.pdb
 D:\CSharp\MidAssignment2\LibraryManagement.WebAPI\obj\Debug\net8.0\LibraryManagement.WebAPI.genruntimeconfig.cache
 D:\CSharp\MidAssignment2\LibraryManagement.WebAPI\obj\Debug\net8.0\ref\LibraryManagement.WebAPI.dll
-D:\CSharp\MidAssignment2\LibraryManagement.WebAPI\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+d:\CSharp\MidAssignment2\LibraryManagement.WebAPI\obj\Debug\net8.0\LibraryManagement.WebAPI.sourcelink.json
+D:\CSharp\MidAssignment2\LibraryManagement.WebAPI\bin\Debug\net8.0\LibraryManagement.WebAPI.xml
+D:\CSharp\MidAssignment2\LibraryManagement.WebAPI\obj\Debug\net8.0\LibraryManagement.WebAPI.xml
+D:\CSharp\MidAssignment2\LibraryManagement.WebAPI\bin\Debug\net8.0\LibraryManagement.Infrastructure.deps.json
+D:\CSharp\MidAssignment2\LibraryManagement.WebAPI\bin\Debug\net8.0\LibraryManagement.Infrastructure.runtimeconfig.json
+D:\CSharp\MidAssignment2\LibraryManagement.WebAPI\bin\Debug\net8.0\LibraryManagement.Infrastructure.exe
+D:\CSharp\MidAssignment2\LibraryManagement.WebAPI\bin\Debug\net8.0\AutoMapper.dll
+D:\CSharp\MidAssignment2\LibraryManagement.WebAPI\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+D:\CSharp\MidAssignment2\LibraryManagement.WebAPI\bin\Debug\net8.0\Bogus.dll

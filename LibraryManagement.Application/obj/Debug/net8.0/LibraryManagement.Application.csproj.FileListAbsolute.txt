@@ -8,6 +8,7 @@ D:\CSharp\MidAssignment2\LibraryManagement.Application\obj\Debug\net8.0\LibraryM
 D:\CSharp\MidAssignment2\LibraryManagement.Application\obj\Debug\net8.0\LibraryManagement.Application.AssemblyInfoInputs.cache
 D:\CSharp\MidAssignment2\LibraryManagement.Application\obj\Debug\net8.0\LibraryManagement.Application.AssemblyInfo.cs
 D:\CSharp\MidAssignment2\LibraryManagement.Application\obj\Debug\net8.0\LibraryManagement.Application.csproj.CoreCompileInputs.cache
+D:\CSharp\MidAssignment2\LibraryManagement.Application\obj\Debug\net8.0\LibraryManagement.Application.sourcelink.json
 D:\CSharp\MidAssignment2\LibraryManagement.Application\obj\Debug\net8.0\LibraryM.C4F4E017.Up2Date
 D:\CSharp\MidAssignment2\LibraryManagement.Application\obj\Debug\net8.0\LibraryManagement.Application.dll
 D:\CSharp\MidAssignment2\LibraryManagement.Application\obj\Debug\net8.0\refint\LibraryManagement.Application.dll
